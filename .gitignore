@@ -280,6 +280,7 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+
 # Windows
 # =========================
 
@@ -301,3 +302,8 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# Added
+*.jpg
+*.mp4
+*.txt
