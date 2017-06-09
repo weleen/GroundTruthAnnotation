@@ -1,10 +1,6 @@
 #include <iostream>
-#include <cv.h>
-#include <opencv.hpp>
 #include <fstream>
-#include <vector>
-
-using namespace std;
+#include "disp.h"
 
 #define max(a,b) (((a) > (b)) ? (a) : (b))  
 #define min(a,b) (((a) < (b)) ? (a) : (b))  
@@ -25,6 +21,7 @@ CvScalar getInverseColor(CvScalar c) {
 
 IplImage* src = 0;
 IplImage* dst = 0;
+IplImage* dst_copy = 0;
 int n = 0;
 vector<CvPoint> points;
 
@@ -127,15 +124,23 @@ int main(int argc,char** argv) {
 		cvShowImage("src", src);
 		while (n != annotNum && cvWaitKey(15)!=27);
 		cvDestroyAllWindows();
-		cvReleaseImage(&src);
-		cvReleaseImage(&dst);
 
+		// display last annotation
+		if (num != 0) {
+			dst_copy = cvCloneImage(src);
+			disp_points(points, dst_copy, "last");
+		}
+
+		cvReleaseImage(&dst);
+		cvReleaseImage(&dst_copy);
+		cvReleaseImage(&src);
+		// save annotation in txt file
 		sprintf(txtnum, outFile.c_str(), num);
 		annotFile = outDoc;
 		annotFile.append(txtnum);
 		ofstream file(annotFile);
 		if (!file) {
-			printf("open %s error!", annotFile);
+			printf("open %s error!", annotFile.c_str());
 			return -1;
 		}
 		vector<CvPoint>::iterator it = points.begin();
